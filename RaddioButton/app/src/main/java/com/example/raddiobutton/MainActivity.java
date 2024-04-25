@@ -1,3 +1,4 @@
+//A111221041劉品辰
 package com.example.raddiobutton;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,6 +10,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
+
+import com.example.raddiobutton.SecondActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,8 +25,8 @@ public class MainActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // 获取输入的数据并设置Intent
                 Intent intent = new Intent(MainActivity.this, SecondActivity.class);
-
                 EditText edtnum = findViewById(R.id.edtnum);
                 int num = Integer.parseInt(edtnum.getText().toString());
                 intent.putExtra("quantity", num);
@@ -39,18 +43,20 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("ticketType", ticketType);
 
                 int price = 0;
-                if (type.getCheckedRadioButtonId() == R.id.rdbAdult)
+                if (selectedId == R.id.rdbAdult)
                     price = 500 * num;
-                else if (type.getCheckedRadioButtonId() == R.id.rdbChild)
+                else if (selectedId == R.id.rdbChild)
                     price = 250 * num;
                 else
                     price = 400 * num;
                 intent.putExtra("price", price);
 
+                // 启动SecondActivity
                 startActivity(intent);
             }
         });
     }
+
 }
 
 /*
@@ -94,9 +100,9 @@ public class MainActivity extends AppCompatActivity {
                 outputStr += num + "張\n";
 
                 int price = 0;
-                if (type.getCheckedRadioButtonId()  == R.id.rdbAdult)
+                if (type.getCheckedRadioButtonId() == R.id.rdbAdult)
                     price = 500;
-                else if (type.getCheckedRadioButtonId()  == R.id.rdbChild)
+                else if (type.getCheckedRadioButtonId() == R.id.rdbChild)
                     price = 250;
                 else
                     price = 400;
@@ -111,7 +117,8 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
 
 
-
             }
         });
-    }*/
+    }
+}
+*/

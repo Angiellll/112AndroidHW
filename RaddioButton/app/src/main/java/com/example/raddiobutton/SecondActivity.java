@@ -34,5 +34,9 @@ public class SecondActivity extends AppCompatActivity {
         txvTicketType.setText(ticketType);
         txvQuantity.setText(quantity + "張");
         txvPrice.setText("金額: " + price);
+
+
+
+
     }
 }
