@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">RaddioButton1</string>
+    <string name="title_activity_main2">MainActivity2</string>
+    <string name="send">確認</string>
+    <string name="male">男生</string>
+    <string name="female">女生</string>
+    <string name="rdbAdult">成人(NTD 500)</string>
+    <string name="rdbChild">孩童(NTD 250)</string>
+    <string name="rdbStudent">學生(NTD 400)</string>
+    <string name="gender">性別：</string>
+    <string name="ticket_type">票種：</string>
+    <string name="num_tickets">張數：</string>
+    <string name="tickets">張</string>
+    <string name="total_price">總價：</string>
+</resources>
