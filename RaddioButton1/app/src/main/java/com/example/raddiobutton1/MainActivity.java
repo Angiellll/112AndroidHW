@@ -1,5 +1,4 @@
 package com.example.raddiobutton1;
-
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -12,6 +11,9 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
+
+    private String gender;
+    private String outputstr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,37 +57,37 @@ public class MainActivity extends AppCompatActivity {
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // 獲取選擇的性別、票種和填寫的張數
-                RadioButton selectedGender = findViewById(genderGroup.getCheckedRadioButtonId());
-                String gender = selectedGender.getText().toString();
+                // 獲取選擇的票種和填寫的張數
                 RadioButton selectedTicket = findViewById(ticketGroup.getCheckedRadioButtonId());
-                String ticketType = selectedTicket.getText().toString();
-                String numString = numEditText.getText().toString();
+                String ticketType = selectedTicket != null ? selectedTicket.getText().toString() : "";
 
-                int numTickets;
-                try {
-                    numTickets = Integer.parseInt(numString);
-                } catch (NumberFormatException e) {
-                    numTickets = 0;
-                }
+                EditText numEditText = findViewById(R.id.num);
+                String numString = numEditText.getText().toString();
+                int numTickets = numString.isEmpty() ? 0 : Integer.parseInt(numString);
 
                 // 計算總價
-                int totalPrice;
-                if (ticketType.equals(getString(R.string.rdbAdult))) {
-                    totalPrice = numTickets * 500;
-                } else if (ticketType.equals(getString(R.string.rdbChild))) {
-                    totalPrice = numTickets * 250;
-                } else if (ticketType.equals(getString(R.string.rdbStudent))) {
-                    totalPrice = numTickets * 400;
-                } else {
-                    totalPrice = 0; // 其他情況下總價為0
+                int ticketPrice = 0;
+                int checkedRadioButtonId = ticketGroup.getCheckedRadioButtonId();
+                if (checkedRadioButtonId == R.id.rdbAdult) {
+                    ticketPrice = 500; // 成人票价为500
+                } else if (checkedRadioButtonId == R.id.rdbChild) {
+                    ticketPrice = 250; // 孩童票价为250
+                } else if (checkedRadioButtonId == R.id.rdbStudent) {
+                    ticketPrice = 400; // 学生票价为400
                 }
 
+                int total = ticketPrice * numTickets;
+
                 // 顯示結果
-                String output = getString(R.string.gender) + gender + "\n" +
-                        getString(R.string.ticket_type) + ticketType + "\n" +
-                        getString(R.string.num_tickets) + numTickets + getString(R.string.tickets) + "\n" +
-                        getString(R.string.total_price) + totalPrice;
+                String output = "";
+                if (!gender.isEmpty()) {
+                    output += getString(R.string.gender) + gender + "\n";
+                }
+                if (!ticketType.isEmpty()) {
+                    output += getString(R.string.ticket_type) + ticketType + "\n";
+                }
+                output += getString(R.string.num_tickets) + numTickets + getString(R.string.tickets) + "\n";
+                output += getString(R.string.total_price) + total;
                 outputTextView.setText(output);
 
                 // 跳轉到下一頁
@@ -99,35 +101,37 @@ public class MainActivity extends AppCompatActivity {
     // 更新 lblOutput
     private void updateOutput(TextView outputTextView, RadioGroup genderGroup, RadioGroup ticketGroup, EditText numEditText) {
         RadioButton selectedGender = findViewById(genderGroup.getCheckedRadioButtonId());
-        String gender = selectedGender != null ? selectedGender.getText().toString() : "";
+        gender = selectedGender != null ? selectedGender.getText().toString() : "";
 
         RadioButton selectedTicket = findViewById(ticketGroup.getCheckedRadioButtonId());
         String ticketType = selectedTicket != null ? selectedTicket.getText().toString() : "";
 
         String numString = numEditText.getText().toString();
-        int numTickets;
-        try {
-            numTickets = Integer.parseInt(numString);
-        } catch (NumberFormatException e) {
-            numTickets = 0;
+        int numTickets = numString.isEmpty() ? 0 : Integer.parseInt(numString);
+
+        // 計算總價
+        int ticketPrice = 0;
+        int checkedRadioButtonId = ticketGroup.getCheckedRadioButtonId();
+        if (checkedRadioButtonId == R.id.rdbAdult) {
+            ticketPrice = 500; // 成人票价为500
+        } else if (checkedRadioButtonId == R.id.rdbChild) {
+            ticketPrice = 250; // 孩童票价为250
+        } else if (checkedRadioButtonId == R.id.rdbStudent) {
+            ticketPrice = 400; // 学生票价为400
         }
 
-        int totalPrice;
-        if (ticketType.equals(getString(R.string.rdbAdult))) {
-            totalPrice = numTickets * 500;
-        } else if (ticketType.equals(getString(R.string.rdbChild))) {
-            totalPrice = numTickets * 250;
-        } else if (ticketType.equals(getString(R.string.rdbStudent))) {
-            totalPrice = numTickets * 400;
-        } else {
-            totalPrice = 0; // 其他情況下總價為0
-        }
+        int total = ticketPrice * numTickets;
 
-        // 顯示更新的結果
-        String output = getString(R.string.gender) + gender + "\n" +
-                getString(R.string.ticket_type) + ticketType + "\n" +
-                getString(R.string.num_tickets) + numTickets + getString(R.string.tickets) + "\n" +
-                getString(R.string.total_price) + totalPrice;
+        // 顯示結果
+        String output = "";
+        if (!gender.isEmpty()) {
+            output += getString(R.string.gender) + gender + "\n";
+        }
+        if (!ticketType.isEmpty()) {
+            output += getString(R.string.ticket_type) + ticketType + "\n";
+        }
+        output += getString(R.string.num_tickets) + numTickets + getString(R.string.tickets) + "\n";
+        output += getString(R.string.total_price) + total;
         outputTextView.setText(output);
     }
 }
