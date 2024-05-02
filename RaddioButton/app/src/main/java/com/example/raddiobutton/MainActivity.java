@@ -1,6 +1,4 @@
-//A111221041劉品辰
 package com.example.raddiobutton;
-
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -12,113 +10,128 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import com.example.raddiobutton.SecondActivity;
-
 public class MainActivity extends AppCompatActivity {
 
+    private String gender;
+    private String outputstr;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_main);
 
-        Button button = findViewById(R.id.button);
-        button.setOnClickListener(new View.OnClickListener() {
+        // 宣告所有需要的元件
+        RadioGroup genderGroup = findViewById(R.id.rgGender);
+        RadioGroup ticketGroup = findViewById(R.id.rgType);
+        EditText numEditText = findViewById(R.id.num);
+        TextView outputTextView = findViewById(R.id.lblOutput);
+
+        // 監聽性別選擇
+        genderGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                updateOutput(outputTextView, genderGroup, ticketGroup, numEditText);
+            }
+        });
+
+        // 監聽票種選擇
+        ticketGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                updateOutput(outputTextView, genderGroup, ticketGroup, numEditText);
+            }
+        });
+
+        // 監聽填寫張數
+        numEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    updateOutput(outputTextView, genderGroup, ticketGroup, numEditText);
+                }
+            }
+        });
+
+        // 監聽按鈕
+        Button confirmButton = findViewById(R.id.button);
+        confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // 获取输入的数据并设置Intent
+                // 獲取選擇的票種和填寫的張數
+                RadioButton selectedTicket = findViewById(ticketGroup.getCheckedRadioButtonId());
+                String ticketType = selectedTicket != null ? selectedTicket.getText().toString() : "";
+
+                EditText numEditText = findViewById(R.id.num);
+                String numString = numEditText.getText().toString();
+                int numTickets = numString.isEmpty() ? 0 : Integer.parseInt(numString);
+
+                // 計算總價
+                int ticketPrice = 0;
+                int checkedRadioButtonId = ticketGroup.getCheckedRadioButtonId();
+                if (checkedRadioButtonId == R.id.rdbAdult) {
+                    ticketPrice = 500; // 成人票价为500
+                } else if (checkedRadioButtonId == R.id.rdbChild) {
+                    ticketPrice = 250; // 孩童票价为250
+                } else if (checkedRadioButtonId == R.id.rdbStudent) {
+                    ticketPrice = 400; // 学生票价为400
+                }
+
+                int sum = ticketPrice * numTickets;
+
+                // 顯示結果
+                String output = "";
+                if (!gender.isEmpty()) {
+                    output += getString(R.string.gender) + gender + "\n";
+                }
+                if (!ticketType.isEmpty()) {
+                    output += getString(R.string.ticketTYpe) + ticketType + "\n";
+                }
+                output += getString(R.string.numberOfTickets) + numTickets  + "\n";
+                output += getString(R.string.total) + sum;
+                outputTextView.setText(output);
+
+                // 跳轉到下一頁
                 Intent intent = new Intent(MainActivity.this, SecondActivity.class);
-                EditText edtnum = findViewById(R.id.edtnum);
-                int num = Integer.parseInt(edtnum.getText().toString());
-                intent.putExtra("quantity", num);
-
-                RadioButton boy = findViewById(R.id.rdbBoy);
-                RadioButton girl = findViewById(R.id.rdbGirl);
-                String gender = boy.isChecked() ? "男性" : (girl.isChecked() ? "女性" : "");
-                intent.putExtra("gender", gender);
-
-                RadioGroup type = findViewById(R.id.rgType);
-                int selectedId = type.getCheckedRadioButtonId();
-                RadioButton selectedRadioButton = findViewById(selectedId);
-                String ticketType = selectedRadioButton.getText().toString();
-                intent.putExtra("ticketType", ticketType);
-
-                int price = 0;
-                if (selectedId == R.id.rdbAdult)
-                    price = 500 * num;
-                else if (selectedId == R.id.rdbChild)
-                    price = 250 * num;
-                else
-                    price = 400 * num;
-                intent.putExtra("price", price);
-
-                // 启动SecondActivity
+                intent.putExtra("output", output);
                 startActivity(intent);
             }
         });
     }
 
-}
+    // 更新 lblOutput
+    private void updateOutput(TextView outputTextView, RadioGroup genderGroup, RadioGroup ticketGroup, EditText numEditText) {
+        RadioButton selectedGender = findViewById(genderGroup.getCheckedRadioButtonId());
+        gender = selectedGender != null ? selectedGender.getText().toString() : "";
 
-/*
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.layout_main);
+        RadioButton selectedTicket = findViewById(ticketGroup.getCheckedRadioButtonId());
+        String ticketType = selectedTicket != null ? selectedTicket.getText().toString() : "";
 
-        Button button = (Button) findViewById(R.id.button);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String outputStr = "";
-                EditText edtnum = findViewById(R.id.edtnum);
-                String string2Send = edtnum.getText().toString();
-                Intent intent = new Intent(MainActivity.this, SecondActivity.class);
-                intent.putExtra("outputStr", string2Send);
-                startActivity(intent);
+        String numString = numEditText.getText().toString();
+        int numTickets = numString.isEmpty() ? 0 : Integer.parseInt(numString);
 
-                RadioButton boy = (RadioButton) findViewById(R.id.rdbBoy);
-                RadioButton girl = (RadioButton) findViewById(R.id.rdbGirl);
-                String gender = "";
-                if (boy.isChecked())
-                    outputStr += "男性\n";
-                else if (girl.isChecked())
-                    outputStr += "女性\n";
+        // 計算總價
+        int ticketPrice = 0;
+        int checkedRadioButtonId = ticketGroup.getCheckedRadioButtonId();
+        if (checkedRadioButtonId == R.id.rdbAdult) {
+            ticketPrice = 500; // 成人票价为500
+        } else if (checkedRadioButtonId == R.id.rdbChild) {
+            ticketPrice = 250; // 孩童票价为250
+        } else if (checkedRadioButtonId == R.id.rdbStudent) {
+            ticketPrice = 400; // 学生票价为400
+        }
 
-                RadioGroup type = (RadioGroup) findViewById(R.id.rgType);
+        int sum = ticketPrice * numTickets;
 
-
-                String ticketType = "";
-                if (type.getCheckedRadioButtonId() == R.id.rdbAdult)
-                    outputStr += "成人票\n";
-                else if (type.getCheckedRadioButtonId() == R.id.rdbChild)
-                    outputStr += "孩童票\n";
-                else
-                    outputStr += "學生票\n";
-
-
-                int num = Integer.parseInt(edtnum.getText().toString());
-                outputStr += num + "張\n";
-
-                int price = 0;
-                if (type.getCheckedRadioButtonId() == R.id.rdbAdult)
-                    price = 500;
-                else if (type.getCheckedRadioButtonId() == R.id.rdbChild)
-                    price = 250;
-                else
-                    price = 400;
-
-                int total = price * num;
-                outputStr += "金額：" + total + "元";
-
-                intent.putExtra("gender", gender); // 將性別添加到Intent中
-                intent.putExtra("ticketType", ticketType); // 將票種添加到Intent中
-                intent.putExtra("quantity", num); // 將張數添加到Intent中
-                intent.putExtra("price", total); // 將價錢添加到Intent中
-                startActivity(intent);
-
-
-            }
-        });
+        // 顯示結果
+        String output = "";
+        if (!gender.isEmpty()) {
+            output += getString(R.string.gender) + gender + "\n";
+        }
+        if (!ticketType.isEmpty()) {
+            output += getString(R.string.ticketTYpe) + ticketType + "\n";
+        }
+        output += getString(R.string.numberOfTickets) + numTickets  + "\n";
+        output += getString(R.string.total) + sum;
+        outputTextView.setText(output);
     }
 }
-*/
