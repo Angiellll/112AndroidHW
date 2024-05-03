@@ -48,7 +48,7 @@
         android:layout_width="51dp"
         android:layout_height="22dp"
         android:layout_marginStart="32dp"
-        android:text="Ticket Type :"
+        android:text="Type :"
         app:layout_constraintBottom_toTopOf="@+id/rgType"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/rgGender"
@@ -58,9 +58,11 @@
         android:id="@+id/rgType"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
+        android:layout_marginStart="15dp"
         android:layout_marginTop="194dp"
+        android:layout_marginEnd="20dp"
         android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
