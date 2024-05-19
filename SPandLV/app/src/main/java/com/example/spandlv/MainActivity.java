@@ -10,10 +10,12 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
+
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import android.content.Intent;
+import android.os.Bundle;
 
 public class MainActivity extends AppCompatActivity {
     private Spinner spFoodCategory; // 食物類別的下拉選單
@@ -26,6 +28,9 @@ public class MainActivity extends AppCompatActivity {
     private String selectedMainCourse = "請選擇"; // 選擇的主餐
     private String selectedSideDish = "請選擇"; // 選擇的附餐
     private String selectedDrink = "請選擇"; // 選擇的飲料
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,9 +142,17 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+
     // 處理送出訂單邏輯
     private void submitOrder() {
-
+        // 创建一个 Intent 对象，指定要启动的 Activity
+        Intent intent = new Intent(MainActivity.this, SecondActivity.class);
+        // 将当前 TextView 的文本内容作为额外数据传递给第二个页面
+        intent.putExtra("main_text", main.getText().toString());
+        intent.putExtra("sidedish_text", sidedish.getText().toString());
+        intent.putExtra("drink_text", drink.getText().toString());
+        // 启动第二个页面
+        startActivity(intent);
     }
 
     // 處理取消訂單邏輯
